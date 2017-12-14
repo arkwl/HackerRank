@@ -1,11 +1,12 @@
 import Queue
 
 class Node(object):
-    def __init__(self, data, left=None, right=None, marked=False):
+    def __init__(self, data, left=None, right=None, marked=False, parentIndex= None):
         self.data = data
         self.left = left
         self.right = right
         self.marked = marked
+        self.parentIndex = parentIndex
 
 root = None
 
@@ -28,30 +29,43 @@ def print_tree(node):
     if node.right is not None:
         print_tree(node.right)
 
-
-
 def bfs(node):
     queue = Queue.Queue()
 
     node.marked = True
-    queue.put(node)
+    queue.put((node, 0))
+
+    #result = {}
+
+    sum = 0
 
     while (not queue.empty()):
-        r = queue.get()
 
-        print(r.data)
+        info = queue.get()
+        r = info[0]
+        index = info[1]
 
+        #print(str(r.data) + " " + str(index))
+
+        #if index not in result:
+        #    result[index] = []
+        #result[index].append(r.data)
+
+        sum += r.data
 
         #left
         if(r.left != None and r.left.marked == False):
             r.left.marked = True
-            queue.put(r.left)
+            queue.put((r.left, index + 1))
 
         #right
         if(r.right != None and r.right.marked == False):
             r.right.marked = True
-            queue.put(r.right)
+            queue.put((r.right, index + 1))
+
+    print sum
 
 
 root = binary_search([1, 2, 3, 4, 6 ,7, 8])
+print_tree(root)
 bfs(root)
